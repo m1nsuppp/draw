@@ -1,4 +1,5 @@
 import { Ellipse } from './ellipse';
+import { FreePath } from './free-path';
 import { Line } from './line';
 import { PainterModel } from './painter.model';
 import { Rectangle } from './rectangle';
@@ -19,18 +20,25 @@ export class PainterView {
 
     const line = new Line(50, 50, 100, 80);
     line.setStrokeColor('pink');
+    this.painterModel.addLayer(line);
 
     const rectangle = new Rectangle(110, 20, 100, 50);
     rectangle.setStrokeColor('red');
     rectangle.setFillColor('blue');
+    this.painterModel.addLayer(rectangle);
 
     const ellipse = new Ellipse(110, 120, 100, 80);
     ellipse.setStrokeColor('green');
     ellipse.setFillColor('yellow');
-
-    this.painterModel.addLayer(line);
-    this.painterModel.addLayer(rectangle);
     this.painterModel.addLayer(ellipse);
+
+    const freePath = new FreePath([
+      { x: 10, y: 20 },
+      { x: 30, y: 140 },
+      { x: 50, y: 60 },
+    ]);
+    freePath.setStrokeColor('black');
+    this.painterModel.addLayer(freePath);
   }
 
   private ctx: CanvasRenderingContext2D;

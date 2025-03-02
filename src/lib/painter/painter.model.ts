@@ -1,8 +1,9 @@
-import { Ellipse } from './ellipse';
-import { Line } from './line';
-import { Rectangle } from './rectangle';
+import { type Ellipse } from './ellipse';
+import { type FreePath } from './free-path';
+import { type Line } from './line';
+import { type Rectangle } from './rectangle';
 
-type LayerType = Line | Rectangle | Ellipse;
+type LayerType = Line | Rectangle | Ellipse | FreePath;
 
 export class PainterModel {
   constructor() {
