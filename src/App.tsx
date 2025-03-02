@@ -20,7 +20,7 @@ export function App() {
     canvas.height = parentElement.clientHeight;
 
     const painterView = new PainterView(canvas);
-    painterView.repaint();
+    // painterView.repaint();
 
     setPainterView(painterView);
   }, []);
