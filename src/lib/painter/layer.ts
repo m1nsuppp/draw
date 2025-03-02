@@ -11,6 +11,24 @@ export abstract class Layer {
 
   abstract draw(ctx: CanvasRenderingContext2D): void;
 
+  setStrokeColor(color: string): void {
+    this.strokeColor = color;
+  }
+
+  setStrokeWidth(width: number): void {
+    this.strokeWidth = width;
+  }
+
+  setFillColor(color: string): void {
+    this.fillColor = color;
+  }
+
+  applyStyle(ctx: CanvasRenderingContext2D): void {
+    ctx.lineWidth = this.strokeWidth;
+    ctx.strokeStyle = this.strokeColor;
+    ctx.fillStyle = this.fillColor;
+  }
+
   toString(): string {
     return 'Layer';
   }

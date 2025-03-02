@@ -17,9 +17,20 @@ export class PainterView {
     this.ctx = ctx;
     this.painterModel = new PainterModel();
 
-    this.painterModel.addLayer(new Line(50, 50, 100, 80));
-    this.painterModel.addLayer(new Rectangle(110, 20, 100, 50));
-    this.painterModel.addLayer(new Ellipse(110, 120, 100, 80));
+    const line = new Line(50, 50, 100, 80);
+    line.setStrokeColor('pink');
+
+    const rectangle = new Rectangle(110, 20, 100, 50);
+    rectangle.setStrokeColor('red');
+    rectangle.setFillColor('blue');
+
+    const ellipse = new Ellipse(110, 120, 100, 80);
+    ellipse.setStrokeColor('green');
+    ellipse.setFillColor('yellow');
+
+    this.painterModel.addLayer(line);
+    this.painterModel.addLayer(rectangle);
+    this.painterModel.addLayer(ellipse);
   }
 
   private ctx: CanvasRenderingContext2D;

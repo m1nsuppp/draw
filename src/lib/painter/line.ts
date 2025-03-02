@@ -16,8 +16,7 @@ export class Line extends Layer {
   private endY: number;
 
   draw(ctx: CanvasRenderingContext2D): void {
-    ctx.lineWidth = this.strokeWidth;
-    ctx.strokeStyle = this.strokeColor;
+    this.applyStyle(ctx);
 
     ctx.beginPath();
     ctx.moveTo(this.startX, this.startY);

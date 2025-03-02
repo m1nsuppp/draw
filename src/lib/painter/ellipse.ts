@@ -16,9 +16,7 @@ export class Ellipse extends Layer {
   height: number;
 
   draw(ctx: CanvasRenderingContext2D): void {
-    ctx.lineWidth = this.strokeWidth;
-    ctx.strokeStyle = this.strokeColor;
-    ctx.fillStyle = this.fillColor;
+    this.applyStyle(ctx);
 
     this.drawEllipseByBezierCurve(ctx, this.x, this.y, this.width, this.height);
   }
