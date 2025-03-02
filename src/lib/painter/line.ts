@@ -1,7 +1,8 @@
-export class Line {
+import { Layer } from './layer';
+
+export class Line extends Layer {
   constructor(startX: number, startY: number, endX: number, endY: number) {
-    this.strokeColor = 'green';
-    this.strokeWidth = 10;
+    super();
 
     this.startX = startX;
     this.startY = startY;
@@ -9,14 +10,12 @@ export class Line {
     this.endY = endY;
   }
 
-  private strokeColor: string;
-  private strokeWidth: number;
   private startX: number;
   private startY: number;
   private endX: number;
   private endY: number;
 
-  drawLine(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: CanvasRenderingContext2D): void {
     ctx.lineWidth = this.strokeWidth;
     ctx.strokeStyle = this.strokeColor;
 

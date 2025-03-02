@@ -1,9 +1,8 @@
-export class Rectangle {
-  constructor(x: number, y: number, width: number, height: number) {
-    this.strokeColor = 'red';
-    this.strokeWidth = 10;
+import { Layer } from './layer';
 
-    this.fillColor = 'blue';
+export class Rectangle extends Layer {
+  constructor(x: number, y: number, width: number, height: number) {
+    super();
 
     this.x = x;
     this.y = y;
@@ -11,17 +10,12 @@ export class Rectangle {
     this.height = height;
   }
 
-  strokeColor: string;
-  strokeWidth: number;
-
-  fillColor: string;
-
   x: number;
   y: number;
   width: number;
   height: number;
 
-  drawRectangle(ctx: CanvasRenderingContext2D): void {
+  draw(ctx: CanvasRenderingContext2D): void {
     ctx.lineWidth = this.strokeWidth;
     ctx.strokeStyle = this.strokeColor;
     ctx.fillStyle = this.fillColor;

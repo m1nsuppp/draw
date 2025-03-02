@@ -2,26 +2,22 @@ import { Ellipse } from './ellipse';
 import { Line } from './line';
 import { Rectangle } from './rectangle';
 
+type LayerType = Line | Rectangle | Ellipse;
+
 export class PainterModel {
   constructor() {
     this.layers = [];
   }
 
-  layers: (Line | Rectangle | Ellipse)[];
+  layers: LayerType[];
 
   drawLayers(ctx: CanvasRenderingContext2D): void {
     for (const layer of this.layers) {
-      if (layer instanceof Line) {
-        layer.drawLine(ctx);
-      } else if (layer instanceof Rectangle) {
-        layer.drawRectangle(ctx);
-      } else if (layer instanceof Ellipse) {
-        layer.drawEllipse(ctx);
-      }
+      layer.draw(ctx);
     }
   }
 
-  addLayer(layer: Line | Rectangle | Ellipse): void {
+  addLayer(layer: LayerType): void {
     this.layers.push(layer);
   }
 
