@@ -1,6 +1,6 @@
-import { Layer } from './layer';
+import { AbstractLayer } from './layer';
 
-export class Ellipse extends Layer {
+export class Ellipse extends AbstractLayer {
   constructor(x: number, y: number, width: number, height: number) {
     super();
 
@@ -18,10 +18,10 @@ export class Ellipse extends Layer {
   draw(ctx: CanvasRenderingContext2D): void {
     this.applyStyle(ctx);
 
-    this.drawEllipseByBezierCurve(ctx, this.x, this.y, this.width, this.height);
+    Ellipse.drawEllipseByBezierCurve(ctx, this.x, this.y, this.width, this.height);
   }
 
-  drawEllipseByBezierCurve(
+  static drawEllipseByBezierCurve(
     ctx: CanvasRenderingContext2D,
     x: number,
     y: number,

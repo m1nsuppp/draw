@@ -1,9 +1,7 @@
-import { type Point } from '../types';
+import type { Point } from '../types';
 import { Ellipse } from './ellipse';
-import { FreePath } from './free-path';
-import { Line } from './line';
+import { LayerType } from './layer';
 import { PainterModel } from './painter.model';
-import { Rectangle } from './rectangle';
 
 export class PainterView {
   constructor(canvas: HTMLCanvasElement) {
@@ -20,59 +18,68 @@ export class PainterView {
 
     this.ctx = ctx;
     this.painterModel = new PainterModel();
+    this.selectedLayerType = 'line';
 
-    // const line = new Line(50, 50, 100, 80);
-    // line.setStrokeColor('pink');
-    // this.painterModel.addLayer(line);
+    this.startX = 0;
+    this.startY = 0;
 
-    // const rectangle = new Rectangle(110, 20, 100, 50);
-    // rectangle.setStrokeColor('red');
-    // rectangle.setFillColor('blue');
-    // this.painterModel.addLayer(rectangle);
+    this.endX = 0;
+    this.endY = 0;
 
-    // const ellipse = new Ellipse(110, 120, 100, 80);
-    // ellipse.setStrokeColor('green');
-    // ellipse.setFillColor('yellow');
-    // this.painterModel.addLayer(ellipse);
+    this.points = [];
 
-    // const freePath = new FreePath([
-    //   { x: 10, y: 20 },
-    //   { x: 30, y: 140 },
-    //   { x: 50, y: 60 },
-    // ]);
-    // freePath.setStrokeColor('black');
-    // this.painterModel.addLayer(freePath);
     canvas.addEventListener('mousedown', this.handleMouseEvent, false);
   }
 
-  private canvas: HTMLCanvasElement;
-  private ctx: CanvasRenderingContext2D;
-  private painterModel: PainterModel;
+  canvas: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
+  painterModel: PainterModel;
+  selectedLayerType: LayerType;
+
+  startX: number;
+  startY: number;
+
+  endX: number;
+  endY: number;
+
+  points: Point[];
 
   handleMouseEvent = (e: MouseEvent): void => {
     const canvas = this.canvas;
-    const painterViewThis = this;
+
+    const canvasImageData = this.ctx.getImageData(0, 0, canvas.width, canvas.height);
 
     const pressedPoint = this.getRelativePosition(e, canvas);
-    console.log({ pressedPoint });
+    this.startX = pressedPoint.x;
+    this.startY = pressedPoint.y;
 
     const handleMouseMove = (e: MouseEvent) => {
-      const movedPoint = painterViewThis.getRelativePosition(e, canvas);
+      const movedPoint = this.getRelativePosition(e, canvas);
+      this.endX = movedPoint.x;
+      this.endY = movedPoint.y;
 
-      console.log({ movedPoint });
+      this.points.push({ x: this.endX, y: this.endY });
+
+      this.ctx.putImageData(canvasImageData, 0, 0);
+
+      this.draw(this.ctx);
     };
-
     canvas.addEventListener('mousemove', handleMouseMove, false);
 
     const handleMouseUp = (e: MouseEvent) => {
-      const releasedPoint = painterViewThis.getRelativePosition(e, canvas);
+      const releasedPoint = this.getRelativePosition(e, canvas);
+      this.endX = releasedPoint.x;
+      this.endY = releasedPoint.y;
 
-      console.log({ releasedPoint });
+      this.points.push({ x: this.endX, y: this.endY });
+
+      this.ctx.putImageData(canvasImageData, 0, 0);
+
+      this.draw(this.ctx);
 
       canvas.removeEventListener('mousemove', handleMouseMove);
       canvas.removeEventListener('mouseup', handleMouseUp);
     };
-
     canvas.addEventListener('mouseup', handleMouseUp, false);
   };
 
@@ -82,6 +89,39 @@ export class PainterView {
     const y = Math.floor(e.clientY - rect.top);
 
     return { x, y };
+  }
+
+  draw(ctx: CanvasRenderingContext2D): void {
+    if (this.selectedLayerType === 'line') {
+      ctx.beginPath();
+      ctx.moveTo(this.startX, this.startY);
+      ctx.lineTo(this.endX, this.endY);
+      ctx.stroke();
+    } else if (this.selectedLayerType === 'rectangle') {
+      const width = this.endX - this.startX;
+      const height = this.endY - this.startY;
+
+      ctx.fillRect(this.startX, this.startY, width, height);
+      ctx.strokeRect(this.startX, this.startY, width, height);
+    } else if (this.selectedLayerType === 'ellipse') {
+      const width = this.endX - this.startX;
+      const height = this.endY - this.startY;
+
+      Ellipse.drawEllipseByBezierCurve(ctx, this.startX, this.startY, width, height);
+    } else if (this.selectedLayerType === 'free-path') {
+      ctx.beginPath();
+      ctx.moveTo(this.startX, this.startY);
+
+      this.points.forEach((point) => {
+        ctx.lineTo(point.x, point.y);
+      });
+
+      ctx.stroke();
+    }
+  }
+
+  setSelectedLayerType(layerType: LayerType): void {
+    this.selectedLayerType = layerType;
   }
 
   repaint(): void {

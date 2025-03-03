@@ -1,7 +1,7 @@
 import { type Point } from '../types';
-import { Layer } from './layer';
+import { AbstractLayer } from './layer';
 
-export class FreePath extends Layer {
+export class FreePath extends AbstractLayer {
   constructor(points: Point[]) {
     super();
 

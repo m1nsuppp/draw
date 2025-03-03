@@ -1,6 +1,6 @@
-import { Layer } from './layer';
+import { AbstractLayer } from './layer';
 
-export class Line extends Layer {
+export class Line extends AbstractLayer {
   constructor(startX: number, startY: number, endX: number, endY: number) {
     super();
 

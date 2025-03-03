@@ -1,4 +1,4 @@
-export abstract class Layer {
+export abstract class AbstractLayer {
   constructor() {
     this.strokeColor = 'red';
     this.strokeWidth = 10;
@@ -33,3 +33,5 @@ export abstract class Layer {
     return 'Layer';
   }
 }
+
+export type LayerType = 'line' | 'rectangle' | 'ellipse' | 'free-path';

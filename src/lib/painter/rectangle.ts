@@ -1,6 +1,6 @@
-import { Layer } from './layer';
+import { AbstractLayer } from './layer';
 
-export class Rectangle extends Layer {
+export class Rectangle extends AbstractLayer {
   constructor(x: number, y: number, width: number, height: number) {
     super();
 

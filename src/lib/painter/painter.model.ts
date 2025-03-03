@@ -3,14 +3,14 @@ import { type FreePath } from './free-path';
 import { type Line } from './line';
 import { type Rectangle } from './rectangle';
 
-type LayerType = Line | Rectangle | Ellipse | FreePath;
+type Layer = Line | Rectangle | Ellipse | FreePath;
 
 export class PainterModel {
   constructor() {
     this.layers = [];
   }
 
-  layers: LayerType[];
+  layers: Layer[];
 
   drawLayers(ctx: CanvasRenderingContext2D): void {
     for (const layer of this.layers) {
@@ -18,7 +18,7 @@ export class PainterModel {
     }
   }
 
-  addLayer(layer: LayerType): void {
+  addLayer(layer: Layer): void {
     this.layers.push(layer);
   }
 
