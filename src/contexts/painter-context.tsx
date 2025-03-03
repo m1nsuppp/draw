@@ -1,8 +1,12 @@
 import { createContext, useContext } from 'react';
 import { PainterView } from '../lib/painter/painter.view';
+import { PainterController } from '../lib/painter/painter.controller';
+import { PainterModel } from '../lib/painter/painter.model';
 
 export type PainterContextValue = {
+  painterModel: PainterModel | null;
   painterView: PainterView | null;
+  painterController: PainterController | null;
 };
 
 export const PainterContext = createContext<PainterContextValue | undefined>(undefined);

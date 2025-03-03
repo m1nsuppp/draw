@@ -1,6 +1,5 @@
 import type { Point } from '../types';
-import { Ellipse } from './ellipse';
-import { LayerType } from './layer';
+import { PainterController } from './painter.controller';
 import { PainterModel } from './painter.model';
 
 export class PainterView {
@@ -17,65 +16,43 @@ export class PainterView {
     ctx.fillStyle = 'blue';
 
     this.ctx = ctx;
-    this.painterModel = new PainterModel();
-    this.selectedLayerType = 'line';
 
-    this.startX = 0;
-    this.startY = 0;
-
-    this.endX = 0;
-    this.endY = 0;
-
-    this.points = [];
+    this.painterModel = null;
+    this.painterController = null;
+    this.canvasImageData = null;
 
     canvas.addEventListener('mousedown', this.handleMouseEvent, false);
   }
 
   canvas: HTMLCanvasElement;
   ctx: CanvasRenderingContext2D;
-  painterModel: PainterModel;
-  selectedLayerType: LayerType;
 
-  startX: number;
-  startY: number;
+  painterModel: PainterModel | null;
+  painterController: PainterController | null;
 
-  endX: number;
-  endY: number;
-
-  points: Point[];
+  canvasImageData: ImageData | null;
 
   handleMouseEvent = (e: MouseEvent): void => {
     const canvas = this.canvas;
+    const painterController = this.painterController;
+    if (!painterController) {
+      return;
+    }
 
-    const canvasImageData = this.ctx.getImageData(0, 0, canvas.width, canvas.height);
+    this.saveImageData();
 
     const pressedPoint = this.getRelativePosition(e, canvas);
-    this.startX = pressedPoint.x;
-    this.startY = pressedPoint.y;
+    painterController.handleMouseDown(pressedPoint);
 
     const handleMouseMove = (e: MouseEvent) => {
       const movedPoint = this.getRelativePosition(e, canvas);
-      this.endX = movedPoint.x;
-      this.endY = movedPoint.y;
-
-      this.points.push({ x: this.endX, y: this.endY });
-
-      this.ctx.putImageData(canvasImageData, 0, 0);
-
-      this.draw(this.ctx);
+      painterController.handleMouseMove(movedPoint);
     };
     canvas.addEventListener('mousemove', handleMouseMove, false);
 
     const handleMouseUp = (e: MouseEvent) => {
       const releasedPoint = this.getRelativePosition(e, canvas);
-      this.endX = releasedPoint.x;
-      this.endY = releasedPoint.y;
-
-      this.points.push({ x: this.endX, y: this.endY });
-
-      this.ctx.putImageData(canvasImageData, 0, 0);
-
-      this.draw(this.ctx);
+      painterController.handleMouseUp(releasedPoint);
 
       canvas.removeEventListener('mousemove', handleMouseMove);
       canvas.removeEventListener('mouseup', handleMouseUp);
@@ -91,41 +68,39 @@ export class PainterView {
     return { x, y };
   }
 
-  draw(ctx: CanvasRenderingContext2D): void {
-    if (this.selectedLayerType === 'line') {
-      ctx.beginPath();
-      ctx.moveTo(this.startX, this.startY);
-      ctx.lineTo(this.endX, this.endY);
-      ctx.stroke();
-    } else if (this.selectedLayerType === 'rectangle') {
-      const width = this.endX - this.startX;
-      const height = this.endY - this.startY;
+  repaint(): void {
+    if (!this.canvasImageData) {
+      return;
+    }
 
-      ctx.fillRect(this.startX, this.startY, width, height);
-      ctx.strokeRect(this.startX, this.startY, width, height);
-    } else if (this.selectedLayerType === 'ellipse') {
-      const width = this.endX - this.startX;
-      const height = this.endY - this.startY;
+    this.ctx.putImageData(this.canvasImageData, 0, 0);
+    this.painterModel?.drawLayers(this.ctx);
+  }
 
-      Ellipse.drawEllipseByBezierCurve(ctx, this.startX, this.startY, width, height);
-    } else if (this.selectedLayerType === 'free-path') {
-      ctx.beginPath();
-      ctx.moveTo(this.startX, this.startY);
+  draw(): void {
+    if (!this.canvasImageData) {
+      return;
+    }
 
-      this.points.forEach((point) => {
-        ctx.lineTo(point.x, point.y);
-      });
+    this.ctx.putImageData(this.canvasImageData, 0, 0);
 
-      ctx.stroke();
+    if (this.painterController) {
+      if (this.painterController.isValidDrawing()) {
+        this.painterController.draw(this.ctx);
+      }
     }
   }
 
-  setSelectedLayerType(layerType: LayerType): void {
-    this.selectedLayerType = layerType;
+  saveImageData(): void {
+    this.canvasImageData = this.ctx.getImageData(0, 0, this.canvas.width, this.canvas.height);
   }
 
-  repaint(): void {
-    this.painterModel.drawLayers(this.ctx);
+  setPainterModel(painterModel: PainterModel): void {
+    this.painterModel = painterModel;
+  }
+
+  setPainterController(painterController: PainterController): void {
+    this.painterController = painterController;
   }
 
   toString(): string {

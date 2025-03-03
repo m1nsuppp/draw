@@ -10,7 +10,7 @@ const BUTTONS: { id: string; name: string; type: LayerType }[] = [
 ];
 
 export function ToolButtonPanel() {
-  const { painterView } = usePainter();
+  const { painterController } = usePainter();
 
   return (
     <div className="w-80 h-screen bg-white shadow-xl shrink-0">
@@ -21,7 +21,7 @@ export function ToolButtonPanel() {
               key={button.id}
               className="w-full hover:bg-gray-100 text-left px-3 py-2 data-[selected]:bg-gray-200"
               onClick={() => {
-                painterView?.setSelectedLayerType(button.type);
+                painterController?.setSelectedLayerType(button.type);
               }}
             >
               {button.name}
