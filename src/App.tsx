@@ -33,6 +33,8 @@ export function App() {
     painterController.setPainterModel(painterModel);
     painterController.setPainterView(painterView);
 
+    painterModel.registerObserver(painterView);
+
     setPainterModel(painterModel);
     setPainterView(painterView);
     setPainterController(painterController);

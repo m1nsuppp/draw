@@ -90,7 +90,7 @@ export class PainterController {
       this.points.push({ x: this.endX, y: this.endY });
     }
 
-    this.painterView?.repaint();
+    this.painterView?.draw();
   }
 
   isValidDrawing(): boolean {

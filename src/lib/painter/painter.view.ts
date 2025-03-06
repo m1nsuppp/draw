@@ -1,9 +1,12 @@
 import type { Point } from '../types';
 import { PainterController } from './painter.controller';
 import { PainterModel } from './painter.model';
+import { AbstractPainterObserver } from './observer/painter.observer';
 
-export class PainterView {
+export class PainterView extends AbstractPainterObserver {
   constructor(canvas: HTMLCanvasElement) {
+    super();
+
     this.canvas = canvas;
 
     const ctx = canvas.getContext('2d');
@@ -19,6 +22,7 @@ export class PainterView {
 
     this.painterModel = null;
     this.painterController = null;
+
     this.canvasImageData = null;
 
     canvas.addEventListener('mousedown', this.handleMouseEvent, false);
@@ -33,31 +37,29 @@ export class PainterView {
   canvasImageData: ImageData | null;
 
   handleMouseEvent = (e: MouseEvent): void => {
-    const canvas = this.canvas;
-    const painterController = this.painterController;
-    if (!painterController) {
+    if (!this.painterController) {
       return;
     }
 
     this.saveImageData();
 
-    const pressedPoint = this.getRelativePosition(e, canvas);
-    painterController.handleMouseDown(pressedPoint);
+    const pressedPoint = this.getRelativePosition(e, this.canvas);
+    this.painterController?.handleMouseDown(pressedPoint);
 
     const handleMouseMove = (e: MouseEvent) => {
-      const movedPoint = this.getRelativePosition(e, canvas);
-      painterController.handleMouseMove(movedPoint);
+      const movedPoint = this.getRelativePosition(e, this.canvas);
+      this.painterController?.handleMouseMove(movedPoint);
     };
-    canvas.addEventListener('mousemove', handleMouseMove, false);
+    this.canvas.addEventListener('mousemove', handleMouseMove, false);
 
     const handleMouseUp = (e: MouseEvent) => {
-      const releasedPoint = this.getRelativePosition(e, canvas);
-      painterController.handleMouseUp(releasedPoint);
+      const releasedPoint = this.getRelativePosition(e, this.canvas);
+      this.painterController?.handleMouseUp(releasedPoint);
 
-      canvas.removeEventListener('mousemove', handleMouseMove);
-      canvas.removeEventListener('mouseup', handleMouseUp);
+      this.canvas.removeEventListener('mousemove', handleMouseMove, false);
+      this.canvas.removeEventListener('mouseup', handleMouseUp, false);
     };
-    canvas.addEventListener('mouseup', handleMouseUp, false);
+    this.canvas.addEventListener('mouseup', handleMouseUp, false);
   };
 
   getRelativePosition(e: MouseEvent, canvas: HTMLCanvasElement): Point {
@@ -101,6 +103,10 @@ export class PainterView {
 
   setPainterController(painterController: PainterController): void {
     this.painterController = painterController;
+  }
+
+  update(): void {
+    this.repaint();
   }
 
   toString(): string {
