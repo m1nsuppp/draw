@@ -33,5 +33,3 @@ export abstract class AbstractLayer {
     return 'Layer';
   }
 }
-
-export type LayerType = 'line' | 'rectangle' | 'ellipse' | 'free-path';

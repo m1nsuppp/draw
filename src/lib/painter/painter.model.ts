@@ -1,10 +1,11 @@
 import { type Ellipse } from './ellipse';
 import { type FreePath } from './free-path';
-import { type LayerType } from './layer';
 import { type Line } from './line';
 import { type Rectangle } from './rectangle';
 import { type AbstractPainterObserver } from './observer/painter.observer';
 import { AbstractPainterSubject } from './observer/painter.subject';
+import { AbstractLayerManager } from './manager/layer.manager';
+import { LineLayerManager } from './manager/line.manager';
 
 type Layer = Line | Rectangle | Ellipse | FreePath;
 
@@ -13,13 +14,15 @@ export class PainterModel extends AbstractPainterSubject {
     super();
 
     this.layers = [];
-    this.selectedLayerType = 'line';
     this.observers = [];
+
+    this.layerManager = new LineLayerManager();
   }
 
   layers: Layer[];
-  selectedLayerType: LayerType;
   observers: AbstractPainterObserver[];
+
+  layerManager: AbstractLayerManager;
 
   drawLayers(ctx: CanvasRenderingContext2D): void {
     for (const layer of this.layers) {
@@ -30,14 +33,6 @@ export class PainterModel extends AbstractPainterSubject {
   addLayer(layer: Layer): void {
     this.layers.push(layer);
     this.notifyObservers();
-  }
-
-  getSelectedLayerType(): LayerType {
-    return this.selectedLayerType;
-  }
-
-  setSelectedLayerType(layerType: LayerType): void {
-    this.selectedLayerType = layerType;
   }
 
   getLayers(): Layer[] {
@@ -59,6 +54,14 @@ export class PainterModel extends AbstractPainterSubject {
     if (index !== -1) {
       this.observers.splice(index, 1);
     }
+  }
+
+  getLayerManager() {
+    return this.layerManager;
+  }
+
+  setLayerManager(layerManager: AbstractLayerManager): void {
+    this.layerManager = layerManager;
   }
 
   toString(): string {

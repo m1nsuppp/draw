@@ -86,11 +86,7 @@ export class PainterView extends AbstractPainterObserver {
 
     this.ctx.putImageData(this.canvasImageData, 0, 0);
 
-    if (this.painterController) {
-      if (this.painterController.isValidDrawing()) {
-        this.painterController.draw(this.ctx);
-      }
-    }
+    this.painterController?.draw(this.ctx);
   }
 
   saveImageData(): void {
