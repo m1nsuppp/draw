@@ -1,9 +1,7 @@
-import { Point } from '../../types';
 import { LineLayerManager } from '../manager/line.manager';
-import { AbstractPainterContext } from './painter.context';
-import { AbstractPainterState } from './painter.state';
+import { PainterState } from './painter.state';
 
-export class LineState extends AbstractPainterState {
+export class LineState extends PainterState {
   lineManager: LineLayerManager;
   static instance: LineState | null;
 
@@ -21,28 +19,8 @@ export class LineState extends AbstractPainterState {
     return LineState.instance;
   }
 
-  drag(context: AbstractPainterContext, point: Point): void {
-    this.lineManager.setEndPoint(point);
-
-    context.repaintView();
-  }
-
-  press(context: AbstractPainterContext, point: Point): void {
-    this.lineManager.setStartPoint(point);
-  }
-
-  release(context: AbstractPainterContext, point: Point): void {
-    this.lineManager.setEndPoint(point);
-
-    const layer = this.lineManager.createLayer();
-    this.lineManager.reset();
-    context.addLayer(layer);
-  }
-
-  draw(context: AbstractPainterContext, ctx: CanvasRenderingContext2D): void {
-    if (this.lineManager.isValidDrawing()) {
-      this.lineManager.draw(ctx);
-    }
+  createLayerManager(): LineLayerManager {
+    return new LineLayerManager();
   }
 
   toString(): string {

@@ -1,9 +1,7 @@
-import { Point } from '../../types';
 import { EllipseLayerManager } from '../manager/ellipse.manager';
-import { AbstractPainterContext } from './painter.context';
-import { AbstractPainterState } from './painter.state';
+import { PainterState } from './painter.state';
 
-export class EllipseState extends AbstractPainterState {
+export class EllipseState extends PainterState {
   ellipseManager: EllipseLayerManager;
   private static instance: EllipseState | null = null;
 
@@ -21,27 +19,8 @@ export class EllipseState extends AbstractPainterState {
     return EllipseState.instance;
   }
 
-  drag(context: AbstractPainterContext, point: Point): void {
-    this.ellipseManager.setEndPoint(point);
-    context.repaintView();
-  }
-
-  press(context: AbstractPainterContext, point: Point): void {
-    this.ellipseManager.setStartPoint(point);
-  }
-
-  release(context: AbstractPainterContext, point: Point): void {
-    this.ellipseManager.setEndPoint(point);
-
-    const layer = this.ellipseManager.createLayer();
-    this.ellipseManager.reset();
-    context.addLayer(layer);
-  }
-
-  draw(context: AbstractPainterContext, ctx: CanvasRenderingContext2D): void {
-    if (this.ellipseManager.isValidDrawing()) {
-      this.ellipseManager.draw(ctx);
-    }
+  createLayerManager(): EllipseLayerManager {
+    return new EllipseLayerManager();
   }
 
   toString(): string {

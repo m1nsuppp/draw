@@ -1,9 +1,7 @@
-import { Point } from '../../types';
 import { FreePathLayerManager } from '../manager/free-path.manager';
-import { AbstractPainterContext } from './painter.context';
-import { AbstractPainterState } from './painter.state';
+import { PainterState } from './painter.state';
 
-export class FreePathState extends AbstractPainterState {
+export class FreePathState extends PainterState {
   freePathManager: FreePathLayerManager;
   private static instance: FreePathState | null = null;
 
@@ -21,28 +19,8 @@ export class FreePathState extends AbstractPainterState {
     return FreePathState.instance;
   }
 
-  drag(context: AbstractPainterContext, point: Point): void {
-    this.freePathManager.setEndPoint(point);
-
-    context.repaintView();
-  }
-
-  press(context: AbstractPainterContext, point: Point): void {
-    this.freePathManager.setStartPoint(point);
-  }
-
-  release(context: AbstractPainterContext, point: Point): void {
-    this.freePathManager.setEndPoint(point);
-
-    const layer = this.freePathManager.createLayer();
-    this.freePathManager.reset();
-    context.addLayer(layer);
-  }
-
-  draw(context: AbstractPainterContext, ctx: CanvasRenderingContext2D): void {
-    if (this.freePathManager.isValidDrawing()) {
-      this.freePathManager.draw(ctx);
-    }
+  createLayerManager(): FreePathLayerManager {
+    return new FreePathLayerManager();
   }
 
   toString(): string {
