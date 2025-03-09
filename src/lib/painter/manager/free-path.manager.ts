@@ -3,13 +3,13 @@ import { FreePath } from '../free-path';
 import { AbstractBoundingBoxManager } from './bounding-box.manager';
 
 export class FreePathLayerManager extends AbstractBoundingBoxManager {
+  points: Point[];
+
   constructor() {
     super();
 
     this.points = [];
   }
-
-  points: Point[];
 
   setStartPoint(point: Point): void {
     this.points.push(point);

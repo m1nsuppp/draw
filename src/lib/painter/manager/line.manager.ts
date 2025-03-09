@@ -3,6 +3,12 @@ import { Line } from '../line';
 import { AbstractBoundingBoxManager } from './bounding-box.manager';
 
 export class LineLayerManager extends AbstractBoundingBoxManager {
+  startX: number;
+  startY: number;
+
+  endX: number;
+  endY: number;
+
   constructor() {
     super();
 
@@ -12,12 +18,6 @@ export class LineLayerManager extends AbstractBoundingBoxManager {
     this.endX = 0;
     this.endY = 0;
   }
-
-  startX: number;
-  startY: number;
-
-  endX: number;
-  endY: number;
 
   setStartPoint(point: Point): void {
     this.startX = point.x;

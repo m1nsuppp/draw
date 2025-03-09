@@ -2,6 +2,8 @@ import { type Point } from '../types';
 import { AbstractLayer } from './layer';
 
 export class FreePath extends AbstractLayer {
+  points: Point[];
+
   constructor(points: Point[]) {
     super();
 
@@ -11,8 +13,6 @@ export class FreePath extends AbstractLayer {
       this.points.push(point);
     }
   }
-
-  points: Point[];
 
   draw(ctx: CanvasRenderingContext2D): void {
     this.applyStyle(ctx);

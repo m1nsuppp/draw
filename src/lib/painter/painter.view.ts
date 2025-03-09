@@ -4,6 +4,14 @@ import { PainterModel } from './painter.model';
 import { AbstractPainterObserver } from './observer/painter.observer';
 
 export class PainterView extends AbstractPainterObserver {
+  canvas: HTMLCanvasElement;
+  ctx: CanvasRenderingContext2D;
+
+  painterModel: PainterModel | null;
+  painterController: PainterController | null;
+
+  canvasImageData: ImageData | null;
+
   constructor(canvas: HTMLCanvasElement) {
     super();
 
@@ -27,14 +35,6 @@ export class PainterView extends AbstractPainterObserver {
 
     canvas.addEventListener('mousedown', this.handleMouseEvent, false);
   }
-
-  canvas: HTMLCanvasElement;
-  ctx: CanvasRenderingContext2D;
-
-  painterModel: PainterModel | null;
-  painterController: PainterController | null;
-
-  canvasImageData: ImageData | null;
 
   handleMouseEvent = (e: MouseEvent): void => {
     if (!this.painterController) {

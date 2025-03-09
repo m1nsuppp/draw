@@ -2,6 +2,12 @@ import { Point } from '../../types';
 import { AbstractLayerManager } from './layer.manager';
 
 export abstract class AbstractBoundingBoxManager extends AbstractLayerManager {
+  startX: number;
+  startY: number;
+
+  endX: number;
+  endY: number;
+
   constructor() {
     super();
 
@@ -11,12 +17,6 @@ export abstract class AbstractBoundingBoxManager extends AbstractLayerManager {
     this.endX = 0;
     this.endY = 0;
   }
-
-  startX: number;
-  startY: number;
-
-  endX: number;
-  endY: number;
 
   setStartPoint(point: Point): void {
     this.startX = point.x;

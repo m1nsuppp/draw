@@ -10,19 +10,17 @@ import { LineLayerManager } from './manager/line.manager';
 type Layer = Line | Rectangle | Ellipse | FreePath;
 
 export class PainterModel extends AbstractPainterSubject {
+  layers: Layer[];
+  observers: AbstractPainterObserver[];
+  layerManager: AbstractLayerManager;
+
   constructor() {
     super();
 
     this.layers = [];
     this.observers = [];
-
     this.layerManager = new LineLayerManager();
   }
-
-  layers: Layer[];
-  observers: AbstractPainterObserver[];
-
-  layerManager: AbstractLayerManager;
 
   drawLayers(ctx: CanvasRenderingContext2D): void {
     for (const layer of this.layers) {

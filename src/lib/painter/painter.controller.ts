@@ -4,15 +4,15 @@ import { PainterModel } from './painter.model';
 import { PainterView } from './painter.view';
 
 export class PainterController {
+  painterModel: PainterModel | null;
+  painterView: PainterView | null;
+  points: Point[];
+
   constructor() {
     this.painterModel = null;
     this.painterView = null;
+    this.points = [];
   }
-
-  painterModel: PainterModel | null;
-  painterView: PainterView | null;
-
-  points: Point[] = [];
 
   handleMouseDown(point: Point): void {
     const layerManager = this.painterModel?.getLayerManager();

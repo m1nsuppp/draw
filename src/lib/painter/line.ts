@@ -1,6 +1,11 @@
 import { AbstractLayer } from './layer';
 
 export class Line extends AbstractLayer {
+  startX: number;
+  startY: number;
+  endX: number;
+  endY: number;
+
   constructor(startX: number, startY: number, endX: number, endY: number) {
     super();
 
@@ -9,11 +14,6 @@ export class Line extends AbstractLayer {
     this.endX = endX;
     this.endY = endY;
   }
-
-  private startX: number;
-  private startY: number;
-  private endX: number;
-  private endY: number;
 
   draw(ctx: CanvasRenderingContext2D): void {
     this.applyStyle(ctx);

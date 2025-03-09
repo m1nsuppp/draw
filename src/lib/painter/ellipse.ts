@@ -1,6 +1,11 @@
 import { AbstractLayer } from './layer';
 
 export class Ellipse extends AbstractLayer {
+  x: number;
+  y: number;
+  width: number;
+  height: number;
+
   constructor(x: number, y: number, width: number, height: number) {
     super();
 
@@ -9,11 +14,6 @@ export class Ellipse extends AbstractLayer {
     this.width = width;
     this.height = height;
   }
-
-  x: number;
-  y: number;
-  width: number;
-  height: number;
 
   draw(ctx: CanvasRenderingContext2D): void {
     this.applyStyle(ctx);
