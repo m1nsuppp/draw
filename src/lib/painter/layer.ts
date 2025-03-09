@@ -1,3 +1,8 @@
+import { Ellipse } from './ellipse';
+import { FreePath } from './free-path';
+import { Line } from './line';
+import { Rectangle } from './rectangle';
+
 export abstract class AbstractLayer {
   strokeColor: string;
   strokeWidth: number;
@@ -33,3 +38,5 @@ export abstract class AbstractLayer {
     return 'Layer';
   }
 }
+
+export type Layer = Line | Rectangle | Ellipse | FreePath;

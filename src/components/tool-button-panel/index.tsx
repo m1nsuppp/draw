@@ -1,11 +1,11 @@
 import { TabGroup, TabList, Tab } from '@headlessui/react';
 import { usePainter } from '../../contexts/painter-context';
-import { LineLayerManager } from '../../lib/painter/manager/line.manager';
-import { AbstractLayerManager } from '../../lib/painter/manager/layer.manager';
-import { RectangleLayerManager } from '../../lib/painter/manager/rectangle.manager';
-import { EllipseLayerManager } from '../../lib/painter/manager/ellipse.manager';
-import { FreePathLayerManager } from '../../lib/painter/manager/free-path.manager';
 import { useMemo } from 'react';
+import { AbstractPainterState } from '../../lib/painter/state/painter.state';
+import { LineState } from '../../lib/painter/state/line.state';
+import { RectangleState } from '../../lib/painter/state/rectangle.state';
+import { EllipseState } from '../../lib/painter/state/ellipse.state';
+import { FreePathState } from '../../lib/painter/state/free-path.state';
 
 export function ToolButtonPanel() {
   const { painterController } = usePainter();
@@ -13,28 +13,28 @@ export function ToolButtonPanel() {
   const buttons: {
     id: string;
     name: string;
-    manager: AbstractLayerManager;
+    state: AbstractPainterState;
   }[] = useMemo(() => {
     return [
       {
         id: 'line',
         name: 'Line',
-        manager: new LineLayerManager(),
+        state: LineState.getInstance(),
       },
       {
         id: 'rectangle',
         name: 'Rectangle',
-        manager: new RectangleLayerManager(),
+        state: RectangleState.getInstance(),
       },
       {
         id: 'ellipse',
         name: 'Ellipse',
-        manager: new EllipseLayerManager(),
+        state: EllipseState.getInstance(),
       },
       {
         id: 'free-path',
         name: 'Free Path',
-        manager: new FreePathLayerManager(),
+        state: FreePathState.getInstance(),
       },
     ];
   }, []);
@@ -48,7 +48,7 @@ export function ToolButtonPanel() {
               key={button.id}
               className="w-full hover:bg-gray-100 text-left px-3 py-2 data-[selected]:bg-gray-200"
               onClick={() => {
-                painterController?.setLayerManager(button.manager);
+                painterController?.setState(button.state);
               }}
             >
               {button.name}

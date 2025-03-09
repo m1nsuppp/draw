@@ -1,25 +1,20 @@
-import { type Ellipse } from './ellipse';
-import { type FreePath } from './free-path';
-import { type Line } from './line';
-import { type Rectangle } from './rectangle';
 import { type AbstractPainterObserver } from './observer/painter.observer';
 import { AbstractPainterSubject } from './observer/painter.subject';
-import { AbstractLayerManager } from './manager/layer.manager';
-import { LineLayerManager } from './manager/line.manager';
-
-type Layer = Line | Rectangle | Ellipse | FreePath;
+import { AbstractPainterState } from './state/painter.state';
+import { LineState } from './state/line.state';
+import { Layer } from './layer';
 
 export class PainterModel extends AbstractPainterSubject {
   layers: Layer[];
   observers: AbstractPainterObserver[];
-  layerManager: AbstractLayerManager;
+  painterState: AbstractPainterState;
 
   constructor() {
     super();
 
     this.layers = [];
     this.observers = [];
-    this.layerManager = new LineLayerManager();
+    this.painterState = LineState.getInstance();
   }
 
   drawLayers(ctx: CanvasRenderingContext2D): void {
@@ -54,12 +49,12 @@ export class PainterModel extends AbstractPainterSubject {
     }
   }
 
-  getLayerManager() {
-    return this.layerManager;
+  getState(): AbstractPainterState {
+    return this.painterState;
   }
 
-  setLayerManager(layerManager: AbstractLayerManager): void {
-    this.layerManager = layerManager;
+  setState(state: AbstractPainterState): void {
+    this.painterState = state;
   }
 
   toString(): string {

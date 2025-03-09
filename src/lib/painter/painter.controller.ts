@@ -1,22 +1,27 @@
 import { type Point } from '../types';
-import { AbstractLayerManager } from './manager/layer.manager';
+import { type Layer } from './layer';
 import { PainterModel } from './painter.model';
 import { PainterView } from './painter.view';
+import { AbstractPainterContext } from './state/painter.context';
+import { AbstractPainterState } from './state/painter.state';
 
-export class PainterController {
+export class PainterController extends AbstractPainterContext {
   painterModel: PainterModel | null;
   painterView: PainterView | null;
-  points: Point[];
 
   constructor() {
+    super();
     this.painterModel = null;
     this.painterView = null;
-    this.points = [];
   }
 
   handleMouseDown(point: Point): void {
-    const layerManager = this.painterModel?.getLayerManager();
-    layerManager?.setStartPoint(point);
+    if (!this.painterModel) {
+      return;
+    }
+
+    const state = this.painterModel.getState();
+    state.press(this, point);
   }
 
   handleMouseUp(point: Point): void {
@@ -24,12 +29,8 @@ export class PainterController {
       return;
     }
 
-    const layerManager = this.painterModel.getLayerManager();
-    layerManager.setEndPoint(point);
-
-    const layer = layerManager.createLayer();
-    layerManager.reset();
-    this.painterModel.addLayer(layer);
+    const state = this.painterModel.getState();
+    state.release(this, point);
   }
 
   handleMouseMove(point: Point): void {
@@ -37,8 +38,8 @@ export class PainterController {
       return;
     }
 
-    const layerManager = this.painterModel.getLayerManager();
-    layerManager.setEndPoint(point);
+    const state = this.painterModel.getState();
+    state.drag(this, point);
 
     this.painterView?.draw();
   }
@@ -48,10 +49,8 @@ export class PainterController {
       return;
     }
 
-    const layerManager = this.painterModel.getLayerManager();
-    if (layerManager.isValidDrawing()) {
-      layerManager.draw(ctx);
-    }
+    const state = this.painterModel.getState();
+    state.draw(this, ctx);
   }
 
   setPainterModel(painterModel: PainterModel): void {
@@ -62,12 +61,24 @@ export class PainterController {
     this.painterView = painterView;
   }
 
-  setLayerManager(layerManager: AbstractLayerManager): void {
+  setState(state: AbstractPainterState): void {
     if (!this.painterModel) {
       return;
     }
 
-    this.painterModel.setLayerManager(layerManager);
+    this.painterModel.setState(state);
+  }
+
+  repaintView(): void {
+    this.painterView?.repaint();
+  }
+
+  addLayer(layer: Layer): void {
+    if (!this.painterModel) {
+      return;
+    }
+
+    this.painterModel.addLayer(layer);
   }
 
   toString(): string {
